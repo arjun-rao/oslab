@@ -1,0 +1,92 @@
+#1. Create Directory Structure
+mkdir College
+mkdir College/Engg
+mkdir College/Engg/UG/ 
+touch College/Engg/UG/ise.txt
+touch College/Engg/UG/civil.txt
+mkdir College/Engg/PG 
+touch College/Engg/PG/structural.txt
+touch College/Engg/PG/software.txt
+mkdir College/Arts/  
+mkdir College/Arts/UG
+touch College/Arts/UG/ba.txt
+touch College/Arts/UG/bsc.txt
+mkdir College/Arts/PG
+touch College/Arts/PG/mcom.txt
+touch College/Arts/PG/msc.txt
+
+
+#2. List all files identifying directories and executables 
+ls -Rp 
+tree
+
+#3. List files in 3 columns
+ls -l | cut -d ' ' -f 11,12,13
+
+#4. List all files identifying directories and executables, hidden files in column format
+ls -aRlp
+
+#5. List all files having extension .txt
+find . -type f -name "*.txt" 
+
+#6. List all files starting with b
+find . -type f -name "b*"
+
+#7. Copy  civil.txt to UG of arts
+cp ./College/Engg/UG/civil.txt ./College/Arts/UG/civil.txt
+
+#8. Copy  structure.txt to arts
+cp ./College/Engg/PG/structural.txt ./College/Arts/
+
+#9. Display all files in recursive list
+ls -Rp 
+
+#10. List only Directory names
+find . -type d
+
+#11. Count No. of lines in civil.txt
+wc -l ./College/Arts/UG/civil.txt
+
+#12. Display current month
+date +"%B" 
+
+#13. Display current date in form Aug 21
+date +"%b %d" 
+
+#14 copy all txt files from UG directory to arts/temp directory
+mkdir ./College/Arts/temp
+cp ./College/Engg/UG/*.txt ./College/Arts/temp
+
+#15 List all files in Arts/tmep directory
+ls ./College/Arts/temp/            
+
+#16 Remove all files in /Arts/temp asking for confirmation each time
+rm -i ./College/Arts/temp/*.*
+
+#17 Change ise.txt to have execution permission
+chmod a+x ./College/Engg/UG/ise.txt
+
+#18,19 copy mcom,msc to temp1 directory under engg
+mkdir ./College/Engg/temp1
+cp ./College/Arts/PG/mcom.txt ./College/Engg/temp1
+cp ./College/Arts/PG/msc.txt ./College/Engg/temp1
+
+#20 change msc .txt to read write execute for user and other
+chmod 770 ./College/Arts/PG/msc.txt
+
+#21 Change ba.txt to user (read,execute)(5) and owner with read write
+chmod 665 ./College/Arts/UG/ba.txt
+
+#22 remove temp directory
+rm -rf ./College/Arts/temp
+
+#23 count number of files in college directory
+find College -type f | wc -l
+
+#24 remove txt files from temp1
+rm -r ./College/Engg/temp1
+
+#25 Display Recursively, files from College
+ls -R ./College
+
+#26 Simulate Protection and Security Commands
