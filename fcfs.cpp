@@ -7,6 +7,8 @@ struct process{
 	int no;
 	int arrival;
 	int burst;
+	int waiting;
+	int turnaround;
 };
 
 static int cmp_process(const void *p1, const void *p2)
@@ -22,11 +24,18 @@ static int cmp_process(const void *p1, const void *p2)
 
 
 void display(process *q,int n)
-{
+{	
+	float avgwait=0,avgturn=0;
+	cout<<"Process\tArrival\tBurst\tWaiting\tTurnaround\n";
 	for(int i=0;i<n;i++)
 	{
-		cout<<"P"<<q[i].no<<" Burst:"<<q[i].burst<<endl;
+		cout<<"P"<<q[i].no<<"\t"<<q[i].arrival<<"\t"<<q[i].burst<<"\t"<<q[i].waiting<<"\t"<<q[i].turnaround<<endl;
+		avgwait += q[i].waiting;	
+		avgturn += q[i].turnaround;
 	}
+	cout<<"Average waiting time: "<<avgwait/(float)n<<endl;
+	cout<<"Average turnaround time: "<<avgturn/(float)n<<endl;
+	
 }
 
 
@@ -34,18 +43,29 @@ void display(process *q,int n)
 int main()
 {
 	int n;
-	cout<<"Enter number of processes:";
+	cout<<"Enter number of processes: ";
 	cin>>n;
-	process queue[n];
+	process q[n];
 	cout<<"Enter arrival and burst times of each process:\n";
 	for(int i=0;i<n;i++)
 	{	
-		queue[i].no = i+1;
-		cin>>queue[i].arrival>>queue[i].burst;
+		q[i].no = i+1;
+		cin>>q[i].arrival>>q[i].burst;
 	}
-	qsort(queue,n,sizeof(process),cmp_process);
+	qsort(q,n,sizeof(process),cmp_process);
+	int current = q[0].burst;
+	q[0].waiting = 0;
+	q[0].turnaround = q[0].waiting+q[0].burst;
+	for(int i=1;i<n;i++)
+	{
+		//waiting times
+		q[i].waiting = current-q[i].arrival;
+		current += q[i].burst;
+		q[i].turnaround = q[i].waiting+q[i].burst;
+		
+	}
 	cout<<"FCFS order:\n";
-	display(queue,n);
+	display(q,n);
 	return 0;
 
 }
