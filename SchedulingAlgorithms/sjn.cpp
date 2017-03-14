@@ -37,6 +37,7 @@ void calc_times(process *q, int n)
 	for(int i=1;i<n;i++)
 	{
 		//waiting times
+		current = (q[i].arrival>current?q[i].arrival:current);
 		q[i].waiting = current-q[i].arrival;
 		current += q[i].burst;
 		q[i].turnaround = q[i].waiting+q[i].burst;

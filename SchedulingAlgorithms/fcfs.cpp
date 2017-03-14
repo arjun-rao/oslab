@@ -58,6 +58,7 @@ int main()
 	q[0].turnaround = q[0].waiting+q[0].burst;
 	for(int i=1;i<n;i++)
 	{
+		current = (q[i].arrival>current?q[i].arrival:current);
 		//waiting times
 		q[i].waiting = current-q[i].arrival;
 		current += q[i].burst;
