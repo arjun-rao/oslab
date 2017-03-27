@@ -1,0 +1,37 @@
+1. Non Recursive Shell script that accepts any number of arguments and prints them in reverse order.
+    ( Eg. prog A B C should produce C BA as output)
+
+2. Shell script that accepts two file names as arguments, checks if the permission for these files are identical and
+  if the permissions are identical output the common permissions otherwise output each file name followed by its permission.
+
+3. Shell function that takes a valid directory name as an argument and recursively descends all the subdirectories
+  finds the maximum length of any file in that hierarchy and writes this maximum value to the standard output.
+
+4. Shell script that accepts valid login names as arguments and prints their corresponding home directories
+  if no arguments are specified, print a suitable error message.
+
+5. Shell script to implement terminal locking. It shuld prompt the userfor a password.
+  After accepting the password entered by the user, it must prompt again for password confirmation.
+  If a match occurs it must lock the terminal and prompt for the password.
+  If the proper password is entered the terminal mustbe unlocked.
+  Note that the script must be written to disregard break ctrl+D etc.,
+
+6a. Find the largest of three numbers
+6b. Reverese the given string
+
+7. Write a C program using process system call ( fork, exit )
+
+8. Write a C program to do the following:
+Using fork() create a child process. The child prints its own process id and parent id and then exits
+The parent process waits for its child to finish ( by executing wait() )
+and prints its own process id and the id of its child process and then exits
+
+9. Process scheduling using FCFS
+
+10. Process scheduling using SJF
+
+11. Process scheduling using Priority
+
+12. Process scheduling using Round Robin
+
+13. Process synchronization using semaphores(Producer and Consumer Problem)
