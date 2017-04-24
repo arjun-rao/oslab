@@ -4,7 +4,7 @@
 
 pthread_mutex_t buffer_mutex     = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t  canProduce   = PTHREAD_COND_INITIALIZER;
-pthread_cond_t  canConsume   = PTHREAD_COND_INITIALIZER;
+
 
 
 void *producer();
@@ -45,7 +45,7 @@ void *producer()
       // Lock mutex and then wait for signal to relase mutex
       pthread_mutex_lock( &buffer_mutex );
             
-      // Wait while consumer() operates on count
+      // Wait while consumer() operates on buffer
       // mutex unlocked if condition varialbe in consumer() signaled.
       if(buffer==MAX_BUFFER || myrand%2)
         pthread_cond_wait( &canProduce, &buffer_mutex );
@@ -59,11 +59,6 @@ void *producer()
           printf("Produced Item: %d\n",item);
       }
         
-      
-     
-      //signal consumer()
-      //pthread_cond_signal( &canConsume );
-
 
       pthread_mutex_unlock( &buffer_mutex );
 
@@ -86,18 +81,15 @@ void *consumer()
        if(buffer == 0)
        {
            pthread_cond_signal( &canProduce );           
-           //pthread_cond_wait( &canConsume, &buffer_mutex );           
        }
        
        while( buffer > 0)
        {
           myrand = rand()%10;
           if(myrand%2) break;
-          // Condition of if statement has been met.
+        
           printf("Consumed Item: %d\n",++consumed);
-          buffer--; 
-          // Signal to free waiting thread by freeing the mutex.
-          // Note: producer() is now permitted to produce more items                    
+          buffer--;                   
        }       
        pthread_mutex_unlock( &buffer_mutex );
 
