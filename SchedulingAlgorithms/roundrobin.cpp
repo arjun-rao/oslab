@@ -1,10 +1,11 @@
 #include <iostream>
 #include <cmath>
+#include <climits>
 #include <cstdlib>
 
 using namespace std;
 
-#define INT_MAX 32767
+
 
 struct process{
 	int no;
@@ -48,17 +49,16 @@ process getNext(process *q,int n, int& curr_time,int quantum,int& round)
 {
 	
 	
-	//cout<<"\nInGetNext:"<<curr_time<<"\t"<<round<<"\nSkipped";
 	int selected = 0,flag = 0;
 	for(int i=0;i<n;i++)
 	{
-		if(q[i].completed>=q[i].burst || q[i].round >= round){ 
-			continue;
-			//cout<<q[i].no<<"\t";
+		if(q[i].completed>=q[i].burst || q[i].round > round){ 
+			continue;			
 		}
-		if(q[i].arrival <= curr_time && q[i].round < round)
+
+		if(q[i].arrival <= curr_time)
 		{
-			//cout<<"\nSelected "<<q[i].no<<endl;
+			
 			selected = i;
 			flag = 1;
 			break;
@@ -66,10 +66,11 @@ process getNext(process *q,int n, int& curr_time,int quantum,int& round)
 	}
 	if(!flag){
 		round++;
+		if(curr_time < round*quantum) curr_time = round*quantum; 
 		return getNext(q,n,curr_time,quantum,round);
 	}
-	else{
-		q[selected].round++;
+	else{		
+		q[selected].round = (q[selected].round < round)?round+1:q[selected].round+1;
 		int exec = quantum;
 		if(q[selected].completed+quantum>q[selected].burst)
 		{	
@@ -92,20 +93,15 @@ int schedule (process* q, int n,int quantum, int maxtime)
 	//cout<<"\nMaxtime:"<<maxtime<<" - "<<maxtime/(float)quantum;
     rounds = ceil(maxtime/(float)quantum);
 	order = new process[rounds+1];
-	//cout<<"\nRounds:"<<rounds<<endl;
+	cout<<"\nRounds:"<<rounds<<endl;
 	int currenttime = q[0].arrival;
-	int i=0,round=0;
+	int round=0;
 	int j = 0;
 	do
 	{
 		process p = getNext(q,n,currenttime,quantum,round);
-		//cout<<"\nP:"<<p.no<<endl;
+	
 		order[j++] = p;
-		//cout<<"\nj:"<<j<<" time:"<<currenttime<<"Round:"<<round<<endl;
-		
-		// i=(i+1)%n;
-		// if(q[i].round == round)round++;
-
 	}
 	while(j<=rounds);
 	
