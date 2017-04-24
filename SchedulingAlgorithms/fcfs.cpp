@@ -53,10 +53,8 @@ int main()
 		cin>>q[i].arrival>>q[i].burst;
 	}
 	qsort(q,n,sizeof(process),cmp_process);
-	int current = q[0].burst;
-	q[0].waiting = 0;
-	q[0].turnaround = q[0].waiting+q[0].burst;
-	for(int i=1;i<n;i++)
+	int current = 0;
+	for(int i=0;i<n;i++)
 	{
 		current = (q[i].arrival>current?q[i].arrival:current);
 		//waiting times

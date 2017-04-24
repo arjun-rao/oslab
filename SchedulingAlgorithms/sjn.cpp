@@ -1,9 +1,10 @@
 #include <iostream>
+#include <climits>
 #include <cstdlib>
 
 using namespace std;
 
-#define INT_MAX 32767
+
 
 struct process{
 	int no;
@@ -29,26 +30,20 @@ static int cmp_process_arrival(const void *p1, const void *p2)
 
 void calc_times(process *q, int n)
 {
-	int current = q[0].burst;
-	
-	q[0].waiting = 0;
-	q[0].turnaround = q[0].waiting+q[0].burst;
-	
-	for(int i=1;i<n;i++)
+	int current = 0;
+	for (int i=0;i<n;i++)
 	{
-		//waiting times
 		current = (q[i].arrival>current?q[i].arrival:current);
-		q[i].waiting = current-q[i].arrival;
-		current += q[i].burst;
+		q[i].waiting = current - q[i].arrival;
 		q[i].turnaround = q[i].waiting+q[i].burst;
-		
+		current+=q[i].burst;
 	}
 }
 
 process getMinBurst(process *q,int n, int arrival,int burst)
 {
 	
-	int min = 0;
+	int min = -1;
 	for(int i=0;i<n;i++)
 	{
 		if(q[i].scheduled)continue;
@@ -56,6 +51,16 @@ process getMinBurst(process *q,int n, int arrival,int burst)
 		{
 			min = i;
 			burst = q[i].burst;
+		}
+	}
+	if(min == -1)
+	{
+		for(int i=0;i<n;i++)
+		{
+			if(!q[i].scheduled){
+				arrival = q[i].arrival;
+				return getMinBurst(q,n,arrival,burst);	
+			} 
 		}
 	}
 	q[min].scheduled=1;
@@ -87,6 +92,7 @@ void display(process *q,int n,int simple)
 	int current =0;
 	for(int i=0;i<n;i++)
 	{
+		current = (q[i].arrival>current?q[i].arrival:current);
 		cout<<"P"<<q[i].no<<"\t"<<q[i].arrival<<"\t"<<q[i].burst;
 		if(!simple){
 		cout<<"\t"<<current<<"\t"<<q[i].waiting<<"\t"<<q[i].turnaround;
