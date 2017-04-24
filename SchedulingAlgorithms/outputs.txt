@@ -90,3 +90,24 @@ P4	3	1	7	3	4
 Average waiting time: 7
 Average turnaround time: 10.75
 
+Bankers:
+-------------------------------------------------------------------------------
+No of Processes
+5
+No of Resources
+3
+Enter total number of each resource
+10 5 7
+Enter max allocation matrix
+7 5 3
+3 2 2
+9 0 2
+2 2 2
+4 3 3
+Enter allocated matrix
+0 1 0
+2 0 0
+3 0 2
+2 1 1
+0 0 2
+P1, P3, P0, P2, P4,  is the safe sequence
