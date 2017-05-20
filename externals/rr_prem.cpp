@@ -1,4 +1,4 @@
-//Preemptive SJF
+//Preemptive RR
 
 #include <iostream>
 #include <climits>
@@ -7,7 +7,7 @@
 using namespace std;
 
 struct process{
-	int no,remaining,arrival,end,burst,waiting,turnaround;
+	int no,remaining,arrival,finish,burst,waiting,turnaround;
 }*q;
 
 struct order{
@@ -16,7 +16,7 @@ struct order{
 
 int g_index = 0;
 int n;
-
+int quantum;
 vector<order>gantt;
 
 static int cmp_arrive(const void *p1, const void *p2)
@@ -52,12 +52,12 @@ void display(process *q,int n)
 	cout<<"Finish\tWaiting\tTurnaround";cout<<"\n";	
 	for(int i=0;i<n;i++)
 	{
-        q[i].waiting = q[i].end - q[i].arrival - q[i].burst;
-        q[i].turnaround = q[i].end - q[i].arrival;
+        q[i].waiting = q[i].finish - q[i].arrival - q[i].burst;
+        q[i].turnaround = q[i].finish - q[i].arrival;
         avgt+=q[i].turnaround;
         avgw+=q[i].waiting;
 		cout<<"P"<<q[i].no+1<<"\t"<<q[i].arrival<<"\t"<<q[i].burst;		
-		cout<<"\t"<<q[i].end<<"\t"<<q[i].waiting<<"\t"<<q[i].turnaround;			
+		cout<<"\t"<<q[i].finish<<"\t"<<q[i].waiting<<"\t"<<q[i].turnaround;			
 		cout<<endl;
 		
 	}
@@ -66,19 +66,30 @@ void display(process *q,int n)
 	
 }
 
-process * getShortestJob(int &curr)
-{    
-    int min_time = INT_MAX,index=-1;
-    for(int i=0;i<n;i++)
+/*
+1 1
+4 5
+4 4
+6 1
+
+    P1 -
+
+
+*/
+
+process * getNext(int &curr)
+{   
+    static int i;     
+    for(;i<n;i++)
     {
-        if(q[i].remaining < min_time && q[i].arrival <= curr && q[i].remaining>0)                   
+        if(q[i].arrival <= curr && q[i].remaining>0)                   
         {
-            min_time = q[i].remaining;
-            index = i;
+            //add to a queue
+            return &q[i];
         }        
     }
-    if(index==-1)return NULL;
-    return &q[index];
+    if(i==n)i=0;
+    return NULL;
 }
 
 bool isRemaining()
@@ -98,41 +109,60 @@ int main()
     cout<<"Enter number of processes: ";
 	cin>>n;
 	q = new process[n];
-	cout<<"Enter arrival and burst times of each process:\n";
+	cout<<"Enter arrival and burst times of each process:\n";    
 	for(int i=0;i<n;i++)
 	{	
 		q[i].no = i;		
 		cin>>q[i].arrival>>q[i].burst;
         q[i].remaining = q[i].burst;
 	}    
+    cout<<"Enter quantum:";
+    cin>>quantum;
 	//sort based on arrival
 	qsort(q,n,sizeof(process),cmp_arrive);
 	int curr = q[0].arrival;    
-    process *p = NULL;
-    while(isRemaining())
-    {        
-        p = getShortestJob(curr);           
-        if(p!=NULL)   
-        {    
-            p->remaining--;    
-            if(p->remaining == 0)
+    
+    int count = 0;
+    bool picked;
+    for(int i=0;isRemaining();i=(i+1)%n)
+    {
+       
+        if(q[i].arrival <= curr && q[i].remaining>0)                   
+        {
+            count =0;       
+            //add to gantt chart            
+            order g;
+            g.pno = q[i].no;
+            g.time= curr;
+            gantt.push_back(g);
+            g_index++; 
+                     
+            curr+=(q[i].remaining>=quantum)?quantum:q[i].remaining;    
+            q[i].remaining=(q[i].remaining>=quantum)?q[i].remaining-quantum:0;
+            if(q[i].remaining == 0)
             {
-                p->end = curr+1;
-            }
-            if(g_index==0 || (gantt[g_index-1].pno!=p->no)) 
-            {   
-                order g;
-                g.pno = p->no;
-                g.time= curr;
-                gantt.push_back(g);
-                g_index++; 
-
-            }                                    
-                  
+                q[i].finish = curr;
+            }   
         }
-        curr++;
-        
-    }    
+        else
+        {
+            count++;
+        }        
+        if(count == n)
+        {
+            for(int j=0;j<n;j++)
+            {
+                if(q[j].arrival > curr)
+                {
+                    curr = q[j].arrival;
+                    break;
+                }
+            }
+            count = 0;
+            cout<<"Gap Exists!\n";
+        }      
+    }
+    
     printGantt();
     display(q,n);
 	cout<<endl;

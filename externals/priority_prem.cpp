@@ -1,4 +1,4 @@
-//Preemptive SJF
+//Preemptive Priority
 
 #include <iostream>
 #include <climits>
@@ -7,7 +7,7 @@
 using namespace std;
 
 struct process{
-	int no,remaining,arrival,end,burst,waiting,turnaround;
+	int no,remaining,priority,arrival,end,burst,waiting,turnaround;
 }*q;
 
 struct order{
@@ -49,14 +49,14 @@ void display(process *q,int n)
 {	
 	int avgw=0,avgt=0;
 	cout<<"\nProcess\tArrival\tBurst\t";
-	cout<<"Finish\tWaiting\tTurnaround";cout<<"\n";	
+	cout<<"PRTY\tFinish\tWaiting\tTurnaround";cout<<"\n";	
 	for(int i=0;i<n;i++)
 	{
         q[i].waiting = q[i].end - q[i].arrival - q[i].burst;
         q[i].turnaround = q[i].end - q[i].arrival;
         avgt+=q[i].turnaround;
         avgw+=q[i].waiting;
-		cout<<"P"<<q[i].no+1<<"\t"<<q[i].arrival<<"\t"<<q[i].burst;		
+		cout<<"P"<<q[i].no+1<<"\t"<<q[i].arrival<<"\t"<<q[i].burst<<"\t"<<q[i].priority;		
 		cout<<"\t"<<q[i].end<<"\t"<<q[i].waiting<<"\t"<<q[i].turnaround;			
 		cout<<endl;
 		
@@ -66,14 +66,15 @@ void display(process *q,int n)
 	
 }
 
-process * getShortestJob(int &curr)
+process * getMinPriority(int &curr)
 {    
-    int min_time = INT_MAX,index=-1;
+    
+    int minpriority = INT_MAX,index=-1;
     for(int i=0;i<n;i++)
     {
-        if(q[i].remaining < min_time && q[i].arrival <= curr && q[i].remaining>0)                   
+        if(q[i].priority < minpriority && q[i].arrival <= curr && q[i].remaining>0)                   
         {
-            min_time = q[i].remaining;
+            minpriority = q[i].priority;
             index = i;
         }        
     }
@@ -98,11 +99,11 @@ int main()
     cout<<"Enter number of processes: ";
 	cin>>n;
 	q = new process[n];
-	cout<<"Enter arrival and burst times of each process:\n";
+	cout<<"Enter arrival,burst & priority times of each process:\n";
 	for(int i=0;i<n;i++)
 	{	
 		q[i].no = i;		
-		cin>>q[i].arrival>>q[i].burst;
+		cin>>q[i].arrival>>q[i].burst>>q[i].priority;
         q[i].remaining = q[i].burst;
 	}    
 	//sort based on arrival
@@ -111,7 +112,7 @@ int main()
     process *p = NULL;
     while(isRemaining())
     {        
-        p = getShortestJob(curr);           
+        p = getMinPriority(curr);           
         if(p!=NULL)   
         {    
             p->remaining--;    
@@ -139,3 +140,5 @@ int main()
     return 0;
 
 }
+
+
