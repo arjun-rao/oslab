@@ -1,0 +1,7 @@
+1. Implement Process scheduling using FCFS
+
+2. Implement Process scheduling using SJF
+
+3. Implement Process scheduling using Priority
+
+4. Implement Process scheduling using Round Robin
