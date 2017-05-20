@@ -97,7 +97,7 @@ int main()
 	int curr = q[0].arrival;    
     
     int count = 0;
-    bool picked;
+    
     for(int i=0;isRemaining();i=(i+1)%n)
     {
        
