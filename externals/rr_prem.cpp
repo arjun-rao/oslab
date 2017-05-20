@@ -45,7 +45,7 @@ void printGantt()
     cout<<"\n";
 }
 
-void display(process *q,int n)
+void display()
 {	
 	int avgw=0,avgt=0;
 	cout<<"\nProcess\tArrival\tBurst\t";
@@ -138,7 +138,7 @@ int main()
     }
     
     printGantt();
-    display(q,n);
+    display();
 	cout<<endl;
     return 0;
 
