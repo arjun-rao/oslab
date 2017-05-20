@@ -66,32 +66,6 @@ void display(process *q,int n)
 	
 }
 
-/*
-1 1
-4 5
-4 4
-6 1
-
-    P1 -
-
-
-*/
-
-process * getNext(int &curr)
-{   
-    static int i;     
-    for(;i<n;i++)
-    {
-        if(q[i].arrival <= curr && q[i].remaining>0)                   
-        {
-            //add to a queue
-            return &q[i];
-        }        
-    }
-    if(i==n)i=0;
-    return NULL;
-}
-
 bool isRemaining()
 {
         for(int i=0;i<n;i++)
@@ -150,6 +124,7 @@ int main()
         }        
         if(count == n)
         {
+            // To handle gaps
             for(int j=0;j<n;j++)
             {
                 if(q[j].arrival > curr)
@@ -158,8 +133,7 @@ int main()
                     break;
                 }
             }
-            count = 0;
-            cout<<"Gap Exists!\n";
+            count = 0;            
         }      
     }
     
