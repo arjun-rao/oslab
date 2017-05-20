@@ -7,7 +7,7 @@
 using namespace std;
 
 struct process{
-	int no,remaining,arrival,end,burst,waiting,turnaround;
+	int no,remaining,arrival,finish,burst,waiting,turnaround;
 }*q;
 
 struct order{
@@ -45,19 +45,19 @@ void printGantt()
     cout<<"\n";
 }
 
-void display(process *q,int n)
+void display()
 {	
 	int avgw=0,avgt=0;
 	cout<<"\nProcess\tArrival\tBurst\t";
 	cout<<"Finish\tWaiting\tTurnaround";cout<<"\n";	
 	for(int i=0;i<n;i++)
 	{
-        q[i].waiting = q[i].end - q[i].arrival - q[i].burst;
-        q[i].turnaround = q[i].end - q[i].arrival;
+        q[i].waiting = q[i].finish - q[i].arrival - q[i].burst;
+        q[i].turnaround = q[i].finish - q[i].arrival;
         avgt+=q[i].turnaround;
         avgw+=q[i].waiting;
 		cout<<"P"<<q[i].no+1<<"\t"<<q[i].arrival<<"\t"<<q[i].burst;		
-		cout<<"\t"<<q[i].end<<"\t"<<q[i].waiting<<"\t"<<q[i].turnaround;			
+		cout<<"\t"<<q[i].finish<<"\t"<<q[i].waiting<<"\t"<<q[i].turnaround;			
 		cout<<endl;
 		
 	}
@@ -117,7 +117,7 @@ int main()
             p->remaining--;    
             if(p->remaining == 0)
             {
-                p->end = curr+1;
+                p->finish = curr+1;
             }
             if(g_index==0 || (gantt[g_index-1].pno!=p->no)) 
             {   
@@ -134,7 +134,7 @@ int main()
         
     }    
     printGantt();
-    display(q,n);
+    display();
 	cout<<endl;
     return 0;
 
